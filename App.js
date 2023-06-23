@@ -122,17 +122,18 @@ render() {
       <div className="ms-welcome">
         <Header logo={require("./../../../assets/logo-filled.png")} title={this.props.title} message="Welcome" />
         <HeroList message="Search and find" items={this.state.listItems}>
-          
           <p>{this.state.message}</p>
           <p className="ms-font-l">
             <b>Ask whichever you want</b>
           </p>
-          <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={this.rephraseChatGPT}>
-            Rephrase
-          </DefaultButton>
-          <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={this.listLiterature}>
-            Search Literature
-          </DefaultButton>
+          <div className="ms-welcome__button-container">
+            <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={this.rephraseChatGPT}>
+              Rephrase
+            </DefaultButton>
+            <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={this.listLiterature}>
+              Search Literature
+            </DefaultButton>
+          </div>
         </HeroList>
       </div>
     );
