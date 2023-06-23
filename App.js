@@ -29,7 +29,7 @@ export default class App extends React.Component {
     });
   }
 
-  rephraseChatGPT = async () => {
+  rephraseChatGPT4 = async () => {
     this.setState({
       listItems: [],
       message: "",
@@ -39,7 +39,7 @@ export default class App extends React.Component {
       (result) => {  // Changed this to an arrow function
         if (result.status === Office.AsyncResultStatus.Succeeded) {
 
-          fetch('http://localhost:5000/process', {
+          fetch('http://localhost:5000/process_GPT4', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -65,14 +65,53 @@ export default class App extends React.Component {
       }
     );
   };
+
+
+  rephraseChatGPT3 = async () => {
+    this.setState({
+      listItems: [],
+      message: "",
+    });
+
+    Office.context.document.getSelectedDataAsync(Office.CoercionType.Text,
+      (result) => {  // Changed this to an arrow function
+        if (result.status === Office.AsyncResultStatus.Succeeded) {
+
+          fetch('http://localhost:5000/process_GPT3', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ text: result.value })
+          })
+          .then(response => response.json())
+          .then(data => {
+            var message = data.result;
+            this.setState({ message });
+            this.setState({
+                listItems: data.map(() => ({
+                  icon: "Document",
+                  primaryText: ``,
+                  
+                })),
+              }); 
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+        }
+      }
+    );
+  };
+
+
+
   // 新しいクリックイベント
 listLiterature = async () => {
   this.setState({
     listItems: [],
     message: "",
   });
-
-
   Office.context.document.getSelectedDataAsync(Office.CoercionType.Text,
     async (result) => {
       // Convert the selected text to an embedding vector using the OpenAI API
@@ -90,6 +129,7 @@ listLiterature = async () => {
       }
       
       const data = await response.json();
+      //const filteredData = data.filter(lit => (!isNaN(lit.title) & !isNaN(lit.year) &  !isNaN(lit.secondary_title) & !isNaN(lit.id)));
       
       // Update the state to reflect the top 20 similar literature
       var message = "";
@@ -127,8 +167,11 @@ render() {
             <b>Ask whichever you want</b>
           </p>
           <div className="ms-welcome__button-container">
-            <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={this.rephraseChatGPT}>
-              Rephrase
+            <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={this.rephraseChatGPT3}>
+              Rephrase by GPT3
+            </DefaultButton>
+            <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={this.rephraseChatGPT4}>
+              Rephrase by GPT4
             </DefaultButton>
             <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={this.listLiterature}>
               Search Literature
