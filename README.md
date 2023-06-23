@@ -49,10 +49,13 @@ npm install -g yo generator-office
 yo office
 ```
 プロジェクトのタイプ、使用するOfficeのプログラム、名前、ID、言語などを指定するプロンプトが表示されます。
+
 プロジェクトのタイプとして"Office Add-in Task Pane project React"を選択します。言語はJavaScriptです。
 
 プロジェクトが作成されたら
+
 your-project-name/src/taskpane/components/ ディレクトリの下に、App.js、Header.js、HeroList.jsを上書き保存します。
+
 your-project-name/src/taskpane/　ディレクトリの下に taskpane.cssを上書き保存します。
 
 ### 4. Node.jsおよびPython Flaskによるローカルサーバーの起動
