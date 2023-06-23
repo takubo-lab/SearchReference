@@ -60,6 +60,7 @@ your-project-name/src/taskpane/　ディレクトリの下に taskpane.cssを上
 
 ### 4. Node.jsおよびPython Flaskによるローカルサーバーの起動
 コマンドプロンプトを二つ立ち上げて、片方はPython、もう片方はNode.jsのローカルサーバーの起動に使います。
+
 Python Flask
 ```
 cd your-project-directory
