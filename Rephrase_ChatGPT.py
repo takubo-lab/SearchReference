@@ -21,9 +21,8 @@ df = pd.read_csv(os.path.join(current_dir,'RIS_library','embedded_abstracts.txt'
 df['ada_embedding'] = df['ada_embedding'].apply(lambda x: eval(x))  # convert string to list
 
 
-
 @app.route('/calculate_similarity', methods=['POST'])
-def calculate_similarity():
+def calculate_similarity_GPT3():
     global df
     data = request.get_json()
     response = openai.Embedding.create(
@@ -39,8 +38,12 @@ def calculate_similarity():
     return jsonify(res.to_dict('records'))
 
 
-@app.route('/process', methods=['POST'])
-def process_text():
+
+
+@app.route('/process_GPT4', methods=['POST'])
+def process_text_GPT4():
+    global CHATGPT_MODEL 
+    CHATGPT_MODEL = "gpt-4-0613"
     data = request.get_json()
     text = data['text']
     print(f"""before: {text}""")
@@ -49,11 +52,23 @@ def process_text():
 
     return jsonify({'result': translated_text})
 
+@app.route('/process_GPT3', methods=['POST'])
+def process_text_GPT3():
+    global CHATGPT_MODEL 
+    CHATGPT_MODEL = "gpt-3.5-turbo-16k"
+    data = request.get_json()
+    text = data['text']
+    print(f"""before: {text}""")
+    # Translate the text with GPT-3
+    translated_text = translate_with_chatgpt(text)
+
+    return jsonify({'result': translated_text})
+
 def translate_with_chatgpt(text):
     prompt = f"""You are a skilled editor for a prestigious scientific journal. Your task is to rephrase the 
     following text, which is a part of a manuscript regarding hematopoietic stem cells, to make it suitable for academic publication. 
-    If the text is written in Japanese, translate it into English suitable for academic publication. 
-    Please provide only the revised text.\n\nOriginal Text:\n{text}\n\nRevised/Translated Text:"""
+    If the text is written in Japanese, translate it into English suitable for academic publication. Please leave the brackets or braces 
+    unchanged, and please provide only the revised text.\n\nOriginal Text:\n{text}\n\nRevised/Translated Text:"""
     data = create_chat_completion_with_retry(prompt, retries=3, delay=5)        
     translated_text = data["choices"][0]["message"]["content"].strip() # type: ignore
     
@@ -61,6 +76,7 @@ def translate_with_chatgpt(text):
     return translated_text
 
 def create_chat_completion_with_retry(prompt, retries=3, delay=5):
+    global CHATGPT_MODEL
     for _ in range(retries):
         try:
             data = openai.ChatCompletion.create(
