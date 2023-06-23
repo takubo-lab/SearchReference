@@ -53,6 +53,7 @@ yo office
 
 プロジェクトが作成されたら
 your-project-name/src/taskpane/components/ ディレクトリの下に、App.js、Header.js、HeroList.jsを上書き保存します。
+your-project-name/src/taskpane/　ディレクトリの下に taskpane.cssを上書き保存します。
 
 ### 4. Node.jsおよびPython Flaskによるローカルサーバーの起動
 コマンドプロンプトを二つ立ち上げて、片方はPython、もう片方はNode.jsのローカルサーバーの起動に使います。
