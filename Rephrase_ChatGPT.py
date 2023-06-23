@@ -22,7 +22,7 @@ df['ada_embedding'] = df['ada_embedding'].apply(lambda x: eval(x))  # convert st
 
 
 @app.route('/calculate_similarity', methods=['POST'])
-def calculate_similarity_GPT3():
+def calculate_similarity():
     global df
     data = request.get_json()
     response = openai.Embedding.create(
