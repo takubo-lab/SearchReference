@@ -57,8 +57,8 @@ yo office
 
 プロジェクトが作成されたら
 ```
-your-project-name/src/taskpane/components/ ディレクトリの下に、App.js、Header.js、HeroList.jsを上書き保存します。
-your-project-name/src/taskpane/　ディレクトリの下に taskpane.cssを上書き保存します。
+# your-project-name/src/taskpane/components/ ディレクトリの下に、App.js、Header.js、HeroList.jsを上書き保存します。
+# your-project-name/src/taskpane/　ディレクトリの下に taskpane.cssを上書き保存します。
 ```
 
 ## 実行
