@@ -61,7 +61,8 @@ your-project-name/src/taskpane/components/ ディレクトリの下に、App.js�
 your-project-name/src/taskpane/　ディレクトリの下に taskpane.cssを上書き保存します。
 ```
 
-### 4. Node.jsおよびPython Flaskによるローカルサーバーの起動
+## 実行
+### Node.jsおよびPython Flaskによるローカルサーバーの起動
 コマンドプロンプトを二つ立ち上げて、片方はPython、もう片方はNode.jsのローカルサーバーの起動に使います。
 
 #### Python Flask
@@ -70,8 +71,7 @@ cd your-project-directory
 python Rephrase_ChatGPT.py 
 ```
 
-
-<b>Node.js</b>
+#### Node.js
 ```
 cd your-project-directory/your-project-name
 npm start
