@@ -34,35 +34,39 @@ def calculate_similarity():
     df['similarities'] = df.ada_embedding.apply(lambda x: cosine_similarity(x, embedding))
     res = df.sort_values('similarities', ascending=False).head(50)
     res = res[['title', 'secondary_title', 'year','abstract', 'accession_number', 'similarities']]
+    
+   
+     # 'title', 'secondary_title', 'year', 'abstract', 'accession_number'のNaNを"NA"に置換
+    res[['title', 'secondary_title', 'year','abstract', 'accession_number']] = res[['title', 'secondary_title', 'year','abstract', 'accession_number']].fillna("NA")
+    # 'title', 'secondary_title', 'year', 'abstract', 'accession_number'の空文字列を"NA"に置換
+    res[['title', 'secondary_title', 'year','abstract', 'accession_number']] = res[['title', 'secondary_title', 'year','abstract', 'accession_number']].replace("", "NA")
     print(res)
     return jsonify(res.to_dict('records'))
 
 
 
 
-@app.route('/process_GPT4', methods=['POST'])
-def process_text_GPT4():
+@app.route('/process_text', methods=['POST'])
+def process_text():
     global CHATGPT_MODEL 
-    CHATGPT_MODEL = "gpt-4-0613"
+
     data = request.get_json()
     text = data['text']
+    model = data['model']
+
     print(f"""before: {text}""")
-    # Translate the text with GPT-4
+
+    if model == 'GPT3':
+        CHATGPT_MODEL = "gpt-3.5-turbo-16k"
+    elif model == 'GPT4':
+        CHATGPT_MODEL = "gpt-4-0613"
+    else:
+        return jsonify({'error': 'Invalid model name'}), 400
+
     translated_text = translate_with_chatgpt(text)
 
     return jsonify({'result': translated_text})
 
-@app.route('/process_GPT3', methods=['POST'])
-def process_text_GPT3():
-    global CHATGPT_MODEL 
-    CHATGPT_MODEL = "gpt-3.5-turbo-16k"
-    data = request.get_json()
-    text = data['text']
-    print(f"""before: {text}""")
-    # Translate the text with GPT-3
-    translated_text = translate_with_chatgpt(text)
-
-    return jsonify({'result': translated_text})
 
 def translate_with_chatgpt(text):
     prompt = f"""You are a skilled editor for a prestigious scientific journal. Your task is to rephrase the 
@@ -74,6 +78,7 @@ def translate_with_chatgpt(text):
     
     print(f"""{translated_text}""")
     return translated_text
+
 
 def create_chat_completion_with_retry(prompt, retries=3, delay=5):
     global CHATGPT_MODEL
