@@ -125,12 +125,10 @@ render() {
     return (
       <div className="ms-welcome">
         <Header logo={require("./../../../assets/logo-filled.png")} title={this.props.title} message="Welcome" />
-        <HeroList message="Search and find" items={this.state.listItems}>
-          <p>{this.state.message}</p>
-          <p className="ms-font-l">
-            <b>Ask whichever you want</b>
-          </p>
-          <div className="ms-welcome__button-container">
+        <div className="ms-welcome__search_and_find">
+        <h2 className = "ms-welcome__search_and_fine_header">Search and find</h2>
+        </div>
+        <div className="ms-welcome__button-container">
           <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={() => this.rephraseChatGPT('GPT3')}>
             Rephrase by GPT3
           </DefaultButton>
@@ -141,6 +139,8 @@ render() {
               Search Literature
             </DefaultButton>
           </div>
+        <HeroList message="Results" items={this.state.listItems}>
+          <p>{this.state.message}</p>
         </HeroList>
       </div>
     );
