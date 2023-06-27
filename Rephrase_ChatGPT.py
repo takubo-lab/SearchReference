@@ -57,9 +57,9 @@ def process_text():
     print(f"""before: {text}""")
 
     if model == 'GPT3':
-        CHATGPT_MODEL = "gpt-3.5-turbo-16k"
+        CHATGPT_MODEL = "gpt-3.5-turbo"
     elif model == 'GPT4':
-        CHATGPT_MODEL = "gpt-4-0613"
+        CHATGPT_MODEL = "gpt-4"
     else:
         return jsonify({'error': 'Invalid model name'}), 400
 
