@@ -31,7 +31,7 @@ export default class App extends React.Component {
 
 
 
-  rephraseChatGPT = async (model) => {
+  rephraseChatGPT = async (model, mode) => {
     this.setState({
       listItems: [],
       message: "",
@@ -46,7 +46,7 @@ export default class App extends React.Component {
                   headers: {
                       'Content-Type': 'application/json'
                   },
-                  body: JSON.stringify({ text: result.value, model: model })
+                  body: JSON.stringify({ text: result.value, model: model, mode: mode })
               })
           .then(response => response.json())
           .then(data => {
@@ -71,7 +71,7 @@ export default class App extends React.Component {
 
 
   // 新しいクリックイベント
-listLiterature = async () => {
+listLiterature = async (mode) => {
   this.setState({
     listItems: [],
     message: "",
@@ -79,12 +79,12 @@ listLiterature = async () => {
   Office.context.document.getSelectedDataAsync(Office.CoercionType.Text,
     async (result) => {
       // Convert the selected text to an embedding vector using the OpenAI API
-      const response = await fetch('http://localhost:5000/calculate_similarity', {
+      const response = await fetch('http://localhost:5000/search_literature', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ text: result.value })
+        body: JSON.stringify({ text: result.value, mode: mode })
       });
 
       if (!response.ok) {
@@ -129,15 +129,28 @@ render() {
         <h2 className = "ms-welcome__search_and_fine_header">Search and find</h2>
         </div>
         <div className="ms-welcome__button-container">
-          <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={() => this.rephraseChatGPT('GPT3')}>
+          <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={() => this.rephraseChatGPT('GPT3', 'rephrase')}>
             Rephrase by GPT3
           </DefaultButton>
-          <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={() => this.rephraseChatGPT('GPT4')}>
+          <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={() => this.rephraseChatGPT('GPT4', 'rephrase')}>
             Rephrase by GPT4
           </DefaultButton>
-            <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={this.listLiterature}>
+            <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={() => this.listLiterature('Embedding') }>
               Search Literature
             </DefaultButton>
+          </div>
+          <div className="ms-welcome__button-container">
+
+          <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={() => this.rephraseChatGPT('GPT4', 'complete')}>
+            Completion by GPT4
+          </DefaultButton>
+          <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={() => this.rephraseChatGPT('DEEPL', 'translate')}>
+            Translate by DEEPL
+          </DefaultButton>
+          <DefaultButton className="ms-welcome__action" iconProps={{ iconName: "ChevronRight" }} onClick={() => this.listLiterature('Pubmed') }>
+              Search Pubmed
+            </DefaultButton>
+
           </div>
         <HeroList message="Results" items={this.state.listItems}>
           <p>{this.state.message}</p>
