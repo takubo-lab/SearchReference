@@ -200,5 +200,21 @@ def create_chat_completion_with_retry(prompt, retries=3, delay=5):
         "choices": [{"message": {"content" : "Error was not resolved!"}}]
     }
 
+@app.route('/reload_database', methods=['POST'])
+def reload_database():
+    global df, current_dir
+    message = request.get_json(force=True)['message']
+    print(f"Message received: {message}")
+
+    if message == "update":
+        df = pd.read_csv(os.path.join(current_dir,'RIS_library','embedded_abstracts.txt'),dtype=object)
+        df['ada_embedding'] = df['ada_embedding'].apply(lambda x: eval(x))  # convert string to list
+        print("Rephrase_ChatGPT successfully reloaded the database")
+        return "OK"
+    else:
+        print("Rephrase_ChatGPT failed to reload the database")
+        return "None"
+
+
 if __name__ == '__main__':
     app.run(port=5000)
